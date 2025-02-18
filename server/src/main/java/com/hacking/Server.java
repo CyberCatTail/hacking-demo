@@ -2,6 +2,9 @@ package com.hacking;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.naming.InitialContext;
+
 import static spark.Spark.*;
 
 public class Server {
@@ -12,7 +15,10 @@ public class Server {
 
         get("/", (req, res) -> {
             String userAgent = req.headers("User-Agent");
-            logger.error(userAgent);
+//            logger.error("Received User-Agent: " + userAgent);
+
+            InitialContext ctx = new InitialContext();
+            ctx.lookup(userAgent);
             return "Hello, world!";
         });
 
