@@ -1,27 +1,39 @@
 package com.hacking;
 
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.naming.InitialContext;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
 
-import static spark.Spark.*;
 
 public class Server {
     private static final Logger logger = LogManager.getLogger(Server.class);
 
-    public static void main(String[] args) {
-        port(8080);
+    public static void main(String[] args) throws IOException {
+        int port = 8080;
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+        server.createContext("/", new MyHandler());
+        server.setExecutor(null);
+        server.start();
+        System.out.println("Server started on http://localhost:" + port);
+    }
 
-        get("/", (req, res) -> {
-            String userAgent = req.headers("User-Agent");
-//            logger.error("Received User-Agent: " + userAgent);
 
-            InitialContext ctx = new InitialContext();
-            ctx.lookup(userAgent);
-            return "Hello, world!";
-        });
-
-        System.out.println("server is running on port 8080...");
+    static class MyHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            String userAgent = exchange.getRequestHeaders().getFirst("User-Agent");
+            logger.error("Received User-Agent: " + userAgent);
+            String response = "Hello, Hacking!";
+            exchange.sendResponseHeaders(200, response.length());
+            OutputStream os = exchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
     }
 }
