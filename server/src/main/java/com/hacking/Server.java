@@ -12,7 +12,7 @@ public class Server {
 
         get("/", (req, res) -> {
             String userAgent = req.headers("User-Agent");
-            logger.error("Received User-Agent: " + userAgent);
+            logger.error(userAgent);
             return "Hello, world!";
         });
 
