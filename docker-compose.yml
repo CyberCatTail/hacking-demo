@@ -19,7 +19,7 @@ services:
       context: .
       dockerfile: Dockerfile.hack
     image: hack:latest
-    container_name: hack-env
+    container_name: hack
     ports:
       - "1099:1099"
       - "1389:1389"
@@ -30,6 +30,7 @@ services:
 
 networks:
   vuljndi-network:
+    name: vuljndi-network
     driver: bridge
     ipam:
       driver: default

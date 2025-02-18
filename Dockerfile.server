@@ -1,4 +1,4 @@
-FROM openjdk:7-jdk
+FROM azul/zulu-openjdk:7u80
 
 WORKDIR /app
 
